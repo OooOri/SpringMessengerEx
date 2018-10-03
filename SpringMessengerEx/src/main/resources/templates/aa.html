@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>Signin Template for Bootstrap</title>
+
+    Bootstrap core CSS
+    <link th:href="@{css/bootstrap.min.css}" rel="stylesheet">
+
+    Custom styles for this template
+    <link th:href="@{css/signin.css}" rel="stylesheet">
+  </head>
 <body>
-aaa
+
+<li class="nav-item"><a class="nav-link" href="javascript:document.getElementById('logout').submit()">LogOut</a></li>
+<form id="logout" th:action="@{/logout}" method="post">
+	<!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.tokens}"> -->
+</form>
+<p th:text="${userName}"></p>
+<p th:text="${adminMessage}"></p>
 </body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 </html>

@@ -13,18 +13,18 @@
 <div class="container">
   <h2>Form control: input</h2>
   <p>The form below contains two input elements; one of type text and one of type password:</p>
-  <form th:action="@{/register}" method="post" th:object="${account}">
+  <form th:action="@{/register}" method="post" th:object="${account}" role="form">
     <div class="form-group">
       <label for="user">Name:</label>
-      <input type="text" class="form-control" id="user" name="username">
+      <input type="text" th:field="*{username}" class="form-control" id="user" name="username">
     </div>
     <div class="form-group">
       <label for="email">Email:</label>
-      <input type="text" class="form-control" id="email" name="email">
+      <input type="text" th:field="*{email}" class="form-control" id="email" name="email">
     </div>
     <div class="form-group">
       <label for="password">Password:</label>
-      <input type="password" class="form-control" id="password" name="password">
+      <input type="password" th:field="*{password}" class="form-control" id="password" name="password">
     </div>
     <input type="submit" value="submit" class="btn btn-default">
     <a th:href="@{/}" class="btn btn-default">Cancel</a>

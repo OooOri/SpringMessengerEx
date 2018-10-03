@@ -1,17 +1,10 @@
 package com.holaris.Messenger.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
@@ -25,7 +18,7 @@ import lombok.Data;
 @Entity
 public class Account {
 	@Id @GeneratedValue
-	@Column(name="user_id")
+	@Column(name="account_id")
 	private long id;
 	
 	@NotEmpty(message="The username must not be null")
@@ -38,17 +31,14 @@ public class Account {
 	@NotEmpty(message="The email must not be null")
 	private String email;
 
-	private int active;
+	private boolean enabled=false;
+	
+	private String authority;
 	
 	@CreationTimestamp
     private LocalDateTime createdTimeAt;
 
 	@UpdateTimestamp
     private LocalDateTime updateTimeAt;
-
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
-	
 	
 }

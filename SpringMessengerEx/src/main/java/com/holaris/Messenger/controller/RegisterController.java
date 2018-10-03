@@ -3,11 +3,14 @@ package com.holaris.Messenger.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.holaris.Messenger.model.Account;
 import com.holaris.Messenger.repo.AccountRepository;
@@ -19,8 +22,6 @@ public class RegisterController {
 	@Autowired
 	private AccountService accountService;
 		
-	@Autowired
-	private AccountRepository accountRepository;
 	
 	@GetMapping("/register")
 	public String registerAccount(Model model) {
@@ -34,18 +35,35 @@ public class RegisterController {
 	@PostMapping("/register")
 	public String registerAccountPost(@Valid Account account, BindingResult result, Model model) {
 		
+		Account accountExists = accountService.findAccountByEmail(account.getEmail());
+		
+		if(accountExists != null) {
+			model.addAttribute("userExistMsg", "User already exists");		
+			return "registerAccount";
+		}
+		
 		if(result.hasErrors()) {
 			return "registerAccount";
-		}
-		
-		if(accountRepository.existsByEmail(account.getEmail())) {
-			model.addAttribute("usernameMsg", "Username already exists");
-			
-			return "registerAccount";
-		}
-		
-		accountRepository.save(accountService.createAccount(account.getUsername(), account.getPassword(), account.getEmail()));
+		} else {
+			accountService.saveAccount(account);
+			model.addAttribute("successMessage", "User has been reigstered successfully");
+			model.addAttribute("account", new Account());			
+		}		
 			
 		return "registerAccountSuccess";
 	}
+	
+	
+	@GetMapping("/aa")
+	public ModelAndView home() {
+		ModelAndView modelAndView = new ModelAndView();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Account account = accountService.findAccountByEmail(auth.getName());
+		modelAndView.addObject("userName", "Welcome " + account.getUsername() + " (" + account.getEmail() + ")");
+        modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
+        modelAndView.setViewName("aa");
+        
+        return modelAndView;
+	}
+
 }

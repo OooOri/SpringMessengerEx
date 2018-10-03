@@ -1,48 +1,65 @@
 package com.holaris.Messenger.config;
 
-import javax.activation.DataSource;
+
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
-	/*@Autowired
-	private DataSource dataSource;
-	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication()
-		.usersByUsernameQuery("select username,password,enabled from account where username=?")
-		.authoritiesByUsernameQuery("select username, authority from account where username=?");
-	}*/
+	@Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    		auth.jdbcAuthentication()                
+    		.usersByUsernameQuery("select email, password, enabled from account where email=?")
+            .authoritiesByUsernameQuery("select email, authority from account where email=?")
+            .dataSource(dataSource)
+            .passwordEncoder(bCryptPasswordEncoder);
+    }
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		.antMatchers("/register", "/css/**", "/js/**")
+		.antMatchers("/register","/","/login")
         .permitAll()
-		.anyRequest().authenticated()
-		.and()
+        .anyRequest().authenticated()
+        .and()
 		.formLogin()
-		.loginPage("/login")
-		.permitAll();
+		.loginPage("/login").failureUrl("/error")
+		.defaultSuccessUrl("/aa")
+		.usernameParameter("email")
+		.passwordParameter("password")
+		.and().logout()
+		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		.logoutSuccessUrl("/").and().exceptionHandling()
+		.accessDeniedPage("/access-denied");
 	
 	}
 	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	}
+	@Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+           .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+
+    }
 
 	
 	

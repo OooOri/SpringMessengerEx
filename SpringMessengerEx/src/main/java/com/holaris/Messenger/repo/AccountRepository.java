@@ -8,4 +8,6 @@ import com.holaris.Messenger.model.Account;
 @Repository
 public interface AccountRepository extends CrudRepository<Account, Long> {
 
+	Account findByEmail(String email);
+
 }
