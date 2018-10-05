@@ -54,14 +54,14 @@ public class RegisterController {
 	}
 	
 	
-	@GetMapping("/aa")
+	@GetMapping("/mypage")
 	public ModelAndView home() {
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Account account = accountService.findAccountByEmail(auth.getName());
 		modelAndView.addObject("userName", "Welcome " + account.getUsername() + " (" + account.getEmail() + ")");
         modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
-        modelAndView.setViewName("aa");
+        modelAndView.setViewName("mypage");
         
         return modelAndView;
 	}
