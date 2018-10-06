@@ -35,9 +35,10 @@
 	 <nav class="navbar navbar-expand-sm bg-info navbar-dark">
 	  <!-- Links -->
 	  <ul class="navbar-nav">
-	    <li class="nav-item">
-	      <a class="nav-link" href="#">Link 1</a>
-	    </li>
+	   <li class="nav-item"><a class="nav-link" href="javascript:document.getElementById('logout').submit()">LogOut</a></li>
+			<form id="logout" th:action="@{/logout}" method="post">
+				<!-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.tokens}"> -->
+			</form>
 	    <li class="nav-item">
 	      <a class="nav-link" href="#">Link 2</a>
 	    </li>
@@ -45,8 +46,8 @@
 	      <a class="nav-link" href="#">Link 3</a>
 	    </li>
 	  </ul>
-	  <form class="form-inline" action="/action_page.php">
-	    <input class="form-control mr-sm-2" type="text" placeholder="Search">
+	  <form class="form-inline" action="/account_search" method="get">
+	    <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search">
 	    <button class="btn btn-success" type="submit">Search</button>
 	  </form>
 	</nav> 

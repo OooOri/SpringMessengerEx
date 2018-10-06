@@ -10,18 +10,22 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 
 import lombok.Data;
 
 
 @Data
 @Entity
+@Indexed
 public class Account {
 	@Id @GeneratedValue
 	@Column(name="account_id")
 	private long id;
 	
 	@NotEmpty(message="The username must not be null")
+	@Field
 	private String username;
 	
 	@NotEmpty(message="The password must not be null")

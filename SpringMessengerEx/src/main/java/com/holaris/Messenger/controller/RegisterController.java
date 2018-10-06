@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.holaris.Messenger.model.Account;
-import com.holaris.Messenger.repo.AccountRepository;
 import com.holaris.Messenger.service.AccountService;
 
 @Controller
