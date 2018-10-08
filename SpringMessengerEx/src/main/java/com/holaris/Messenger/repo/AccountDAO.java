@@ -43,7 +43,7 @@ public class AccountDAO {
 			.wildcard()
 			.onFields("username")
 				.boostedTo(5f)
-			.matching("*" +searchText + "*")
+			.matching(searchText + "*")
 			.createQuery();
 		
 		org.hibernate.search.jpa.FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Account.class);

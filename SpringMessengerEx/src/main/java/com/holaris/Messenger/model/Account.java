@@ -1,15 +1,21 @@
 package com.holaris.Messenger.model;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
@@ -39,10 +45,16 @@ public class Account {
 	
 	private String authority;
 	
-	@CreationTimestamp
+	@OneToMany(mappedBy="toAccount" ,cascade=CascadeType.ALL ,fetch=FetchType.EAGER)
+	private List<AlarmMessage> alarmMessage = new ArrayList<>();
+	
+	
+	/*private Set<Relationship> relationship = new HashSet<Relationship>();
+*/
+	/*@CreationTimestamp
     private LocalDateTime createdTimeAt;
 
 	@UpdateTimestamp
-    private LocalDateTime updateTimeAt;
+    private LocalDateTime updateTimeAt;*/
 	
 }

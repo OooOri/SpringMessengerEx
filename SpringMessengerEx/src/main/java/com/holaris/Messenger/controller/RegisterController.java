@@ -59,6 +59,7 @@ public class RegisterController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Account account = accountService.findAccountByEmail(auth.getName());
 		modelAndView.addObject("userName", "Welcome " + account.getUsername() + " (" + account.getEmail() + ")");
+		modelAndView.addObject("user", account.getId());
         modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
         modelAndView.setViewName("mypage");
         

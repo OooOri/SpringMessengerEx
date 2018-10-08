@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<table class="table table-striped">
+			<th:block th:each="message : ${alarmMessage}">
+			      <tr>
+			         <td th:text="${message.alarmContents}">...</td>
+			         <td th:text="${message.fromAccount}">...</td>
+			         <td><a th:href="@{'/friendRequestAccept/' + ${message.fromAccount}}"></a></td>
+			      </tr>			      
+	   		</th:block>
+		</table>
+</body>
+</html>
