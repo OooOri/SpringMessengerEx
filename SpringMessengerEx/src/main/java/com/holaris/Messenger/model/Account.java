@@ -48,9 +48,9 @@ public class Account {
 	@OneToMany(mappedBy="toAccount" ,cascade=CascadeType.ALL ,fetch=FetchType.EAGER)
 	private List<AlarmMessage> alarmMessage = new ArrayList<>();
 	
-	
-	/*private Set<Relationship> relationship = new HashSet<Relationship>();
-*/
+	@OneToMany(mappedBy="friendAccount" ,cascade=CascadeType.ALL ,fetch=FetchType.EAGER)
+	private Set<Relationship> relationship = new HashSet<Relationship>();
+
 	/*@CreationTimestamp
     private LocalDateTime createdTimeAt;
 

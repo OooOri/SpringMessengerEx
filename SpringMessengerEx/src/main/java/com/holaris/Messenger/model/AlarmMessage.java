@@ -19,7 +19,7 @@ public class AlarmMessage {
 	private long id;
 	
 	@ManyToOne
-	@JoinColumn/*(name="toAccount")*/
+	@JoinColumn(name="toAccount")
 	/*@JsonIgnore*/
 	private Account toAccount;
 	

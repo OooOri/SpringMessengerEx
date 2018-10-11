@@ -16,13 +16,10 @@ public class Relationship {
 	@Id @GeneratedValue
 	@Column(name="relation_id")
 	private long id;
-	
-	/*@NotNull
-	private Account requestingUser;
-	
+			
 	@ManyToOne
-	@JoinColumn(name="requestedUser_FK")
-	private Account requestedUser;*/
+	@JoinColumn(name="friendAccount")
+	private Account friendAccount;
 		
 	private boolean isFriend = false;
 }

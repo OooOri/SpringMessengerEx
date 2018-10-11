@@ -9,8 +9,8 @@
 			<th:block th:each="message : ${alarmMessage}">
 			      <tr>
 			         <td th:text="${message.alarmContents}">...</td>
-			         <td th:text="${message.fromAccount}">...</td>
-			         <td><a th:href="@{'/friendRequestAccept/' + ${message.fromAccount}}"></a></td>
+			         <td><a th:href="@{'/friendRequestAccept/' + ${message.fromAccount}}" th:text="${message.fromAccount}"></a></td>
+			         
 			      </tr>			      
 	   		</th:block>
 		</table>

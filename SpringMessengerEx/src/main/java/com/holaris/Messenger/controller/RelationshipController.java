@@ -15,6 +15,8 @@ import com.holaris.Messenger.service.RelationshipService;
 
 
 
+
+
 @Controller
 public class RelationshipController {
 	
@@ -29,8 +31,9 @@ public class RelationshipController {
 	
 	@GetMapping("/requestFriend/{id}")
 	public String requestFriend(@PathVariable long id, Model model) {
-	/*	if(alarmMessageRepository.findByToAccount(accountRepository.findById(id).get())!=null) {
-			System.out.println("추가할 수 없습니다.");
+	/*	친구 요청을 2번이상 누른 경우. 이미 친구 신청을 했다고 경고창을 띄우거나 친구요청을 취소 하는 기능
+	 * if(alarmMessageRepository.findByToAccount(accountRepository.findById(id).get())!=null) {
+			System.out.println("이미 친구 신청을 했습니다.");
 			return "redirect:/add_friend";
 		}*/
 		relationshipService.friendRequest(id);
@@ -40,8 +43,7 @@ public class RelationshipController {
 	
 	@GetMapping("/friendRequestAccept/{id}")
 	public String friendRequestAccept(@PathVariable long id, Model model) {
-	    
-			
-		return "redirect:/alarmMessage";
+	    relationshipService.friendRequestAccept(id);		
+		return "redirect:/mypage";
 	}
 }
