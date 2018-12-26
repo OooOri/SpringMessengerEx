@@ -9,4 +9,6 @@ public class SpringMessengerExApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringMessengerExApplication.class, args);
 	}
+	
+	
 }

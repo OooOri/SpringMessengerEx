@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<title>Insert title here</title>
+</head>
+<body>
+<table class="table table-striped">
+	<tr>
+		<th>BNO</th>
+		<th>TITLE</th>
+		<th>WRITER</th>
+		<th>REGDATE</th>
+		<th>VIEWCNT</th>
+	</tr>
+	<th:block th:each="boardPage : ${boardPage}">
+      <tr>
+         <td th:text="${boardPage.bno}">...</td>
+         <td><a th:href="@{'/board/read?bno=' + ${boardPage.bno}}" th:text="${boardPage.title}+' '+ ${#lists.size(boardPage.reply)}"></a></td>
+         <td th:text="${boardPage.writer}">...</td>
+         <td th:text="${#temporals.format(boardPage.regDate, 'yyyy-MM-dd')}">...</td>
+         <td th:text="${boardPage.viewcnt}">...</td>
+      </tr>			      
+	</th:block>
+</table>
+
+<ul class="pager">
+   
+    <li th:if="${!boardPage.first}" class="previous">
+        <a th:href="@{'?page=' + ${boardPage.number-1}}">&larr; Newer Posts</a>
+    </li>
+   	
+    
+    <li th:if="${!boardPage.last}" class="next">
+        <a th:href="@{'?page=' + ${boardPage.number+1}}">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
+<a href="/board/register">등록</a>
+<script type="text/javascript">
+	var result = '${msg}';
+	
+	if(result == "SUCCESS"){
+		alert("처리가 완료되었습니다.");
+	}
+</script>
+</body>
+</html>

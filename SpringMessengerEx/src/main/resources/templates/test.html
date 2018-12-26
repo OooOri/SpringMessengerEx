@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<h2> Ajax Test Page</h2>
+<div>
+	<div>
+	REPLYER <input type='text' name='replyer' id='newReplyWriter'>
+	</div>
+	<div>
+	REPLYTEXT <input type='text' name='replytext' id='newReplyText'>
+	</div>
+	<button id="replyAddBtn">ADD REPLY</button>
+</div>
+<div id="replies"></div>
+<script type="text/javascript">
+
+function getAllList(){
+	$.getJSON("/replies/all/"+ bno, function(data){
+		$(data).each(
+			function(){
+				str += "<li data-rno='"+this.rno+"' class='replyLi'>"+this.rno + ":" + this.replytext+"</li>";
+			});
+			$("#replies").html(str);
+		});
+	}
+	
+	$("#replyAddBtn").on("click", function(){
+		
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		connected_bno = $("#connected_bno").val();
+		replyer = $("#newReplyWriter").val();
+		replytext = $("#newReplyText").val();
+		
+		$.ajax({
+			type:'POST',
+			url:'/replies',
+			beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+			},
+			headers:{
+				"Content-Type":"application/json",
+				"X-HTTP-Method-Override" : "POST"
+			},
+			dataType : 'text',
+			data : JSON.stringify({	
+				connected_bno : connected_bno,
+				replyer : replyer,
+				replytext : replytext
+			}),
+			success : function(result){
+				if(result == "SUCCESS"){
+					alert("등록 되었습니다.");
+					getAllList();
+				}
+			}
+		});
+	});
+</script>
+</body>
+</html>

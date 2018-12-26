@@ -45,11 +45,14 @@ public class Account {
 	
 	private String authority;
 	
-	@OneToMany(mappedBy="toAccount" ,cascade=CascadeType.ALL ,fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="toAccount" ,cascade=CascadeType.ALL ,fetch=FetchType.LAZY)
 	private List<AlarmMessage> alarmMessage = new ArrayList<>();
 	
 	@OneToMany(mappedBy="friendAccount" ,cascade=CascadeType.ALL ,fetch=FetchType.EAGER)
-	private Set<Relationship> relationship = new HashSet<Relationship>();
+	private List<Relationship> relationship = new ArrayList<>();
+	
+	/*@OneToMany(mappedBy="", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	private List<Board> writtenBoard = new ArrayList<>();*/
 
 	/*@CreationTimestamp
     private LocalDateTime createdTimeAt;

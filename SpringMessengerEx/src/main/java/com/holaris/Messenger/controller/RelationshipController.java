@@ -38,7 +38,7 @@ public class RelationshipController {
 		}*/
 		relationshipService.friendRequest(id);
 			
-		return "redirect:/add_friend";
+		return "redirect:/mypage";
 	}
 	
 	@GetMapping("/friendRequestAccept/{id}")
