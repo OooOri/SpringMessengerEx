@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.holaris.Messenger.model.Account;
 import com.holaris.Messenger.model.Board;
 import com.holaris.Messenger.repo.BoardRepository;
+import com.holaris.Messenger.service.AccountService;
 import com.holaris.Messenger.service.BoardService;
 
 @Controller
@@ -24,6 +28,9 @@ public class BoardController {
 	
 	@Autowired
 	private BoardRepository boardRepository;
+	
+	@Autowired
+	private AccountService accountService;
 	
 	
 	@GetMapping("/board")
@@ -88,15 +95,21 @@ public class BoardController {
 	
 	@GetMapping("/board/read")
 	public void read(@RequestParam("bno") long bno, Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Account account = accountService.findAccountByEmail(auth.getName());
+		
 		boardRepository.getOne(bno).setViewcnt(boardRepository.getOne(bno).getViewcnt()+1);
 		boardRepository.save(boardRepository.getOne(bno));
+		
 		model.addAttribute("board",boardService.read(bno));
+		model.addAttribute("currentUser", account.getEmail());
 	}
 	
 	@PostMapping("/board/remove")
 	public String remove(@RequestParam("bno") long bno, RedirectAttributes rttr) {
 		boardService.remove(bno);
 		rttr.addFlashAttribute("msg", "SUCCESS");
+			
 		return "redirect:/board";
 	}
 	

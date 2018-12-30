@@ -44,17 +44,18 @@
 			<input type="text" name="writer" class="form-control" th:value="${board.writer}" readonly="readonly">
 		</div>
 		
-		<div class="box-footer">
+		<div th:if="${currentUser.equals(board.writer)}" class="box-footer">
 			<button type="submit" class="btn btn-warning">Modify</button>
 			<button type="submit" class="btn btn-danger">REMOVE</button>
+			<button type="submit" class="btn btn-primary">LIST ALL</button>
+		</div>
+		<div th:if="${!currentUser.equals(board.writer)}" class="box-footer">
 			<button type="submit" class="btn btn-primary">LIST ALL</button>
 		</div>
 	</div>
 	
 	<div>
-		<div>
-			REPLYER <input type='text' name='replyer' id='newReplyWriter'>
-		</div>
+		
 		<div>
 			REPLYTEXT <input type='text' name='replytext' id='newReplyText'>
 		</div>
@@ -173,7 +174,7 @@
 		var header = $("meta[name='_csrf_header']").attr("content");
 		
 				
-		replyer = $("#newReplyWriter").val();
+		
 		replytext = $("#newReplyText").val();
 		
 		
@@ -190,7 +191,7 @@
 			dataType : 'text',
 			data : JSON.stringify({	
 				bno : bno,
-				replyer : replyer,
+				
 				replytext : replytext
 			}),
 			success : function(result){

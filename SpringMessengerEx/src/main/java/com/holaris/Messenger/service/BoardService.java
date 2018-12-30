@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.holaris.Messenger.model.Account;
 import com.holaris.Messenger.model.Board;
 import com.holaris.Messenger.repo.BoardRepository;
 
@@ -14,8 +17,12 @@ public class BoardService {
 
 	@Autowired
 	private BoardRepository boardRepository;
-	
+	@Autowired
+	private AccountService accountService;
 	public void register(Board board) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Account account = accountService.findAccountByEmail(auth.getName());
+		board.setWriter(account.getEmail());
 		boardRepository.save(board);
 	}
 	
@@ -24,6 +31,11 @@ public class BoardService {
 	}
 	
 	public void modify(Board board) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Account account = accountService.findAccountByEmail(auth.getName());
+		board.setWriter(account.getEmail());
+		board.setViewcnt(boardRepository.getOne(board.getBno()).getViewcnt());
+		board.setRegDate(boardRepository.getOne(board.getBno()).getRegDate());
 		boardRepository.save(board);
 		
 	}

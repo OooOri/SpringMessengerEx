@@ -40,7 +40,7 @@ public class RelationshipService {
 		AlarmMessage alarmMessage = new AlarmMessage();
 		alarmMessage.setAlarmContents("친구요청이 들어왔습니다");
 		alarmMessage.setAlarmType("F");
-		alarmMessage.setToAccount(accountRepository.findById(id).get());
+		alarmMessage.setToAccount(accountRepository.getOne(id));
 		alarmMessage.setFromAccount(account.getId());
 		alarmMessageRepository.save(alarmMessage);
 		return alarmMessage;
@@ -48,6 +48,7 @@ public class RelationshipService {
 	}
 	
 	public void friendRequestAccept(long id) {
+		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Account currentAccount = accountService.findAccountByEmail(auth.getName());
 		/*	System.out.println(accountRepository.findById(id).get().getId());
@@ -69,18 +70,21 @@ public class RelationshipService {
 		
 		
 		Relationship relationship = new Relationship();
-		relationship.setFriendAccount(accountRepository.findById(id).get());
+		relationship.setFriendAccount(accountRepository.getOne(id));
 		relationship.setFriend(true);
+		relationship.setFriendAccountId(id);
 		relationshipRepository.save(relationship);
 		
 		currentAccount.getRelationship().add(relationship);
 		
+		
 		Relationship relationship2 = new Relationship();
 		relationship2.setFriendAccount(currentAccount);
 		relationship2.setFriend(true);
+		relationship2.setFriendAccountId(currentAccount.getId());
 		relationshipRepository.save(relationship2);
 		
-		accountRepository.findById(id).get().getRelationship().add(relationship2);
+		accountRepository.getOne(id).getRelationship().add(relationship2);
 		
 /*		relationshipRepository.flush(); //두번 누를 때도 위의 조건문에 false로 걸리고 세번 눌러서 true로 바뀌는데 그때는 2개의 결과값을 리턴하므로 오류가 NonUniqueResultException발생하므로 강제로 db저장
 		accountRepository.flush();*/

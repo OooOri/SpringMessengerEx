@@ -6,11 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.holaris.Messenger.model.AlarmMessage;
+import com.holaris.Messenger.model.Account;
 import com.holaris.Messenger.repo.AccountRepository;
 import com.holaris.Messenger.repo.AlarmMessageRepository;
-import com.holaris.Messenger.repo.RelationshipRepository;
-import com.holaris.Messenger.service.AccountService;
 import com.holaris.Messenger.service.RelationshipService;
 
 
@@ -43,7 +41,22 @@ public class RelationshipController {
 	
 	@GetMapping("/friendRequestAccept/{id}")
 	public String friendRequestAccept(@PathVariable long id, Model model) {
+		
 	    relationshipService.friendRequestAccept(id);		
 		return "redirect:/mypage";
 	}
+	
+	
+	@GetMapping("/friend/{id}")
+	public String getAlarmMessage(@PathVariable long id, Model model) {
+		Account account = accountRepository.getOne(id); 
+		/*for(int i=0; i<account.getRelationship().size(); i++) {
+			account.getRelationship().get(i).getFriendAccount().getId();
+		}*/
+		model.addAttribute("friend", account.getRelationship());
+		
+		return "friend";
+	}
+	
+	
 }

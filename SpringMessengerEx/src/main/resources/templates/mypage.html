@@ -45,6 +45,9 @@
 	    <li class="nav-item">
 	      <a class="nav-link" th:href="@{/board}">Board</a>
 	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link" th:href="@{'/friend/' + ${user}}">Friend</a>
+	    </li>
 	  </ul>
 	  <form class="form-inline" action="/account_search" method="get">
 	    <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search">

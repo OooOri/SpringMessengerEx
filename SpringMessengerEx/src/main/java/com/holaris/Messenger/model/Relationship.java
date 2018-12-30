@@ -21,5 +21,6 @@ public class Relationship {
 	@JoinColumn(name="friendAccount")
 	private Account friendAccount;
 		
+	private long friendAccountId;
 	private boolean isFriend = false;
 }
