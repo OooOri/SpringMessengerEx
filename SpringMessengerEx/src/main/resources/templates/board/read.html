@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<style type="text/css">
+#modDiv{
+	width:300px;
+	height:300px;
+	background-color: gray;
+	position:absolute;
+	top:50%;
+	left:50%;
+	margin-top:-50px;
+	margin-left: -150px;
+	padding:10px;
+	z-index:1000;
+
+}
+</style>
+<title>Insert title here</title>
+</head>
+<body>
+	<form role="form" method="POST" id="form" th:action=@{/board/remove}>
+		<input type="hidden" name="bno" id= "bno" th:value="${board.bno}">
+	</form>
+	
+	<div class="box-body">
+		<div class="form-group">
+			<label for="exampleInputEmail1">Title</label>
+			<input type="text" name="title" class="form-control" th:value="${board.title}" readonly="readonly">
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword1">Content</label>
+			<textarea class="form-control" name="contents" rows="3" readonly="readonly" th:inline="text">[[${board.contents}]]</textarea>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputEmail1">Writer</label>
+			<input type="text" name="writer" class="form-control" th:value="${board.writer}" readonly="readonly">
+		</div>
+		
+		<div th:if="${currentUser.equals(board.writer)}" class="box-footer">
+			<button type="submit" class="btn btn-warning">Modify</button>
+			<button type="submit" class="btn btn-danger">REMOVE</button>
+			<button type="submit" class="btn btn-primary">LIST ALL</button>
+		</div>
+		<div th:if="${!currentUser.equals(board.writer)}" class="box-footer">
+			<button type="submit" class="btn btn-primary">LIST ALL</button>
+		</div>
+	</div>
+	
+	<div>
+		
+		<div>
+			REPLYTEXT <input type='text' name='replytext' id='newReplyText'>
+		</div>
+		<button id="replyAddBtn">ADD REPLY</button>
+		<div id="replies"></div>	
+	</div>
+	
+	<div id="modDiv" style="display: none;">
+		<div class="modal-title"></div>
+		<div>
+			<input type='text' id='replytext'>
+		</div>
+		<div>
+			<button type="button" id="replyModBtn">Modify</button>
+			<button type="button" id="replyDelBtn">DELETE</button>
+			<button type="button" id="closeBtn">Close</button>
+		</div>
+	</div>
+
+<script type="text/javascript" th:inline="javascript">
+	bno = $("#bno").val();
+	$(document).ready(function(){
+	   getAllList();
+	});
+	function getAllList(){
+		var str="";
+		$.getJSON("/replies/all/"+ bno, function(data){
+			$(data).each(
+				function(){
+					str += "<li data-rno='"+this.rno+"' class='replyLi'>"+this.rno + ":" + this.replytext+"<button>MOD</button></li>";
+				});
+		
+			$("#replies").html(str);
+			});
+	}
+	
+	
+	$("#replies").on("click", ".replyLi button", function(){
+		var reply = $(this).parent();
+		
+		var rno = reply.attr("data-rno");
+		var replytext = reply.text();
+
+		$(".modal-title").html(rno);
+		$("#replytext").val(replytext);
+		$("#modDiv").show("slow");
+	})
+	
+	
+	
+	$("#replyModBtn").on("click", function(){
+		
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		
+		
+		var rno = $(".modal-title").html();
+		var replytext = $("#replytext").val();
+		
+		$.ajax({
+			type : 'PUT',
+			url : '/replies/' + rno,
+			beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+			},
+			headers:{
+				"Content-Type":"application/json",
+				"X-HTTP-Method-Override" : "PUT"
+			},
+			data:JSON.stringify({replytext:replytext}),
+			dataType : "text",
+			success : function(result){
+				console.log("result :" + result);
+				if(result=='SUCCESS'){
+					alert("수정 되었습니다.");
+					$("#modDiv").hide("slow");
+					getAllList();
+				}
+			}
+		})
+	})
+	
+	$("#replyDelBtn").on("click", function(){
+		
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		
+		
+		var rno = $(".modal-title").html();
+		var replytext = $("#replytext").val();
+		
+		$.ajax({
+			type : 'DELETE',
+			url : '/replies/' + rno,
+			beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+			},
+			headers:{
+				"Content-Type":"application/json",
+				"X-HTTP-Method-Override" : "DELETE"
+			},
+			dataType : "text",
+			success : function(result){
+				console.log("result :" + result);
+				if(result=='SUCCESS'){
+					alert("삭제 되었습니다.");
+					$("#modDiv").hide("slow");
+					getAllList();
+				}
+			}
+		})
+	})
+	$("#replyAddBtn").on("click", function(){
+		
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		
+				
+		
+		replytext = $("#newReplyText").val();
+		
+		
+		$.ajax({
+			type:'POST',
+			url:'/replies',
+			beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+			},
+			headers:{
+				"Content-Type":"application/json",
+				"X-HTTP-Method-Override" : "POST"
+			},
+			dataType : 'text',
+			data : JSON.stringify({	
+				bno : bno,
+				
+				replytext : replytext
+			}),
+			success : function(result){
+				if(result == "SUCCESS"){
+					alert("등록 되었습니다.");
+					getAllList();
+				}
+			}
+		});
+	});
+	
+	$(document).ready(function(){
+		
+		var action = /*[[@{/board/remove}]]*/ '/board/remove';
+
+	    var formObj = $("form[role='form']");
+	    console.log(formObj);
+
+		
+		
+		$(".btn-warning").on("click", function(){
+			formObj.removeAttr("th:action")
+			formObj.attr("action", "/board/modify");
+			formObj.attr("method", "get");
+			formObj.submit();
+		});
+		
+		$(".btn-danger").on("click", function(){
+			formObj.submit();
+		});
+		
+		$(".btn-primary").on("click", function(){
+			self.location = "/board";
+		});
+		
+	});		
+</script>
+</body>
+</html>

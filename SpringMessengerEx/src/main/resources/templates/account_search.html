@@ -19,7 +19,7 @@
 			      <tr>
 			         <td th:text="${user.username}">...</td>
 			         <td th:text="${user.email}">...</td>
-			         <td><a th:href="@{'/requestFriend/' + ${user.id}}" th:text="${user.id}"></a></td>
+			         <td th:if="${!currentUser.equals(user.email)}"><a th:href="@{'/requestFriend/' + ${user.id}}" th:text="${user.id}"></a></td>
 			      </tr>			      
 	   		</th:block>
 		</table>

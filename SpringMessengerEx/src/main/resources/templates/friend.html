@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<table class="table table-striped">
+	<tr>
+		<th>BNO</th>
+		<th>TITLE</th>
+	</tr>
+	<th:block th:each="friend : ${friend}">
+      <tr>
+         <td th:text="${friend.friendAccountId}">...</td>
+         
+      </tr>			      
+	</th:block>
+</table>
+</body>
+</html>
